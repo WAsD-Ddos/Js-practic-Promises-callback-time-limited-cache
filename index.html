@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Практика</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .task { background: white; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .task-title { font-weight: bold; font-size: 1.2em; color: #2c3e50; }
+        .example, .tests { background: #f8f9fa; border-left: 3px solid #6c757d; padding: 10px 15px; margin: 15px 0; }
+        .tests { background: #e8f4f8; border-left: 3px solid #17a2b8; }
+        .hint, .solution { display: none; padding: 10px 15px; margin: 10px 0; }
+        .hint { background: #fff3cd; border-left: 3px solid #ffc107; }
+        .solution { background: #f8f9fa; border: 1px dashed #6c757d; }
+        button { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        button:hover { background: #2980b9; }
+        .difficulty { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; margin-left: 10px; }
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+        pre { margin: 0; }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Практика</h1>
+
+    <!-- Задание 1 -->
+    <div class="task">
+        <div class="task-title">1. Callback-обработка массива <span class="difficulty easy">Легкий</span></div>
+        <div class="task-desc">Напишите функцию <code>processArray(arr, callback)</code>, которая применяет callback к каждому элементу массива.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>const numbers = [1, 2, 3];<br>const squared = processArray(numbers, x => x * x);<br>console.log(squared); // [1, 4, 9]</code>
+        </div>
+        <button onclick="toggleHint('hint1')">Подсказка</button>
+        <button onclick="toggleSolution('solution1')">Решение</button>
+        <div id="hint1" class="hint">Используйте <code>Array.map()</code>.</div>
+        <div id="solution1" class="solution"><pre><code>function processArray(arr, callback) {
+    return arr.map(callback);
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 2 -->
+    <div class="task">
+        <div class="task-title">2. Promise с задержкой <span class="difficulty easy">Легкий</span></div>
+        <div class="task-desc">Создайте функцию <code>delay(ms)</code>, которая возвращает Promise, выполняющийся через указанное время.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>delay(1000).then(() => console.log("Готово!"));</code>
+        </div>
+        <button onclick="toggleHint('hint2')">Подсказка</button>
+        <button onclick="toggleSolution('solution2')">Решение</button>
+        <div id="hint2" class="hint">Используйте <code>setTimeout</code> внутри Promise.</div>
+        <div id="solution2" class="solution"><pre><code>function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 3 -->
+    <div class="task">
+        <div class="task-title">3. Генератор случайных чисел <span class="difficulty easy">Легкий</span></div>
+        <div class="task-desc">Напишите функцию <code>randomInRange(min, max)</code>, используя библиотеку Chance.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>console.log(randomInRange(5, 10)); // Число от 5 до 10</code>
+        </div>
+        <button onclick="toggleHint('hint3')">Подсказка</button>
+        <button onclick="toggleSolution('solution3')">Решение</button>
+        <div id="hint3" class="hint">Используйте <code>chance.integer()</code>.</div>
+        <div id="solution3" class="solution"><pre><code>function randomInRange(min, max) {
+    const chance = new Chance();
+    return chance.integer({ min, max });
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 4 -->
+    <div class="task">
+        <div class="task-title">4. Цепочка Promise <span class="difficulty medium">Средний</span></div>
+        <div class="task-desc">Создайте функцию <code>sequencePromises(promiseFunctions)</code>, которая выполняет Promise последовательно.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>const promises = [<br>  () => delay(100).then(() => 1),<br>  () => delay(200).then(() => 2)<br>];<br>sequencePromises(promises).then(console.log); // [1, 2]</code>
+        </div>
+        <button onclick="toggleHint('hint4')">Подсказка</button>
+        <button onclick="toggleSolution('solution4')">Решение</button>
+        <div id="hint4" class="hint">Используйте <code>Array.reduce()</code> для цепочки.</div>
+        <div id="solution4" class="solution"><pre><code>function sequencePromises(promiseFunctions) {
+    return promiseFunctions.reduce((chain, promiseFn) => {
+        return chain.then(results => 
+            promiseFn().then(result => [...results, result])
+        );
+    }, Promise.resolve([]));
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 5 -->
+    <div class="task">
+        <div class="task-title">5. Time Limited Cache <span class="difficulty medium">Средний</span></div>
+        <div class="task-desc">Реализуйте класс <code>TimeLimitedCache</code> с методами <code>set(key, value, duration)</code> и <code>get(key)</code>.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>const cache = new TimeLimitedCache();<br>cache.set('key', 'value', 1000);<br>cache.get('key'); // 'value' (через 2 секунды: undefined)</code>
+        </div>
+        <button onclick="toggleHint('hint5')">Подсказка</button>
+        <button onclick="toggleSolution('solution5')">Решение</button>
+        <div id="hint5" class="hint">Используйте <code>Map</code> и <code>setTimeout</code>.</div>
+        <div id="solution5" class="solution"><pre><code>class TimeLimitedCache {
+    constructor() { this.cache = new Map(); }
+    set(key, value, duration) {
+        const existing = this.cache.get(key);
+        if (existing) clearTimeout(existing.timeout);
+        const timeout = setTimeout(() => this.cache.delete(key), duration);
+        this.cache.set(key, { value, timeout });
+        return Boolean(existing);
+    }
+    get(key) { return this.cache.get(key)?.value; }
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 6 -->
+    <div class="task">
+        <div class="task-title">6. Асинхронная обработка массива <span class="difficulty medium">Средний</span></div>
+        <div class="task-desc">Напишите функцию <code>asyncProcessArray(arr, asyncCallback, done)</code>, которая обрабатывает массив асинхронно.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>asyncProcessArray([1, 2, 3], <br>  item => delay(100).then(() => item * 2),<br>  results => console.log(results) // [2, 4, 6]<br>);</code>
+        </div>
+        <button onclick="toggleHint('hint6')">Подсказка</button>
+        <button onclick="toggleSolution('solution6')">Решение</button>
+        <div id="hint6" class="hint">Используйте <code>async/await</code> в цикле.</div>
+        <div id="solution6" class="solution"><pre><code>async function asyncProcessArray(arr, asyncCallback, done) {
+    const results = [];
+    for (const item of arr) {
+        results.push(await asyncCallback(item));
+    }
+    done(results);
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 7 -->
+    <div class="task">
+        <div class="task-title">7. Генератор случайных пользователей <span class="difficulty medium">Средний</span></div>
+        <div class="task-desc">Напишите функцию <code>generateRandomUser(country)</code>, используя Chance.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>console.log(generateRandomUser('us'));<br>// { name: 'John', email: 'john@example.com', ... }</code>
+        </div>
+        <button onclick="toggleHint('hint7')">Подсказка</button>
+        <button onclick="toggleSolution('solution7')">Решение</button>
+        <div id="hint7" class="hint">Используйте методы <code>chance.name()</code>, <code>chance.email()</code> и др.</div>
+        <div id="solution7" class="solution"><pre><code>function generateRandomUser(country = 'us') {
+    const chance = new Chance();
+    return {
+        name: chance.name(),
+        email: chance.email(),
+        age: chance.age(),
+        address: chance.address({ country })
+    };
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 8 -->
+    <div class="task">
+        <div class="task-title">8. Расширенный Time Limited Cache <span class="difficulty hard">Сложный</span></div>
+        <div class="task-desc">Добавьте в класс <code>TimeLimitedCache</code> методы <code>size()</code> и <code>has(key)</code>.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>const cache = new TimeLimitedCache();<br>cache.set('key', 'value', 1000);<br>cache.size(); // 1<br>cache.has('key'); // true</code>
+        </div>
+        <button onclick="toggleHint('hint8')">Подсказка</button>
+        <button onclick="toggleSolution('solution8')">Решение</button>
+        <div id="hint8" class="hint">Добавьте приватный метод для очистки истёкших ключей.</div>
+        <div id="solution8" class="solution"><pre><code>class AdvancedTimeLimitedCache extends TimeLimitedCache {
+    #cleanExpired() {
+        const now = Date.now();
+        for (const [key, { expires }] of this.cache) {
+            if (expires <= now) this.cache.delete(key);
+        }
+    }
+    size() { this.#cleanExpired(); return this.cache.size; }
+    has(key) { this.#cleanExpired(); return this.cache.has(key); }
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 9 -->
+    <div class="task">
+        <div class="task-title">9. Promise с таймаутом <span class="difficulty hard">Сложный</span></div>
+        <div class="task-desc">Создайте функцию <code>promiseWithTimeout(promise, timeout)</code>, которая отклоняет Promise, если он не выполнился за время.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>promiseWithTimeout(delay(2000), 1000)<br>  .catch(err => console.log(err.message)); // "Timeout"</code>
+        </div>
+        <button onclick="toggleHint('hint9')">Подсказка</button>
+        <button onclick="toggleSolution('solution9')">Решение</button>
+        <div id="hint9" class="hint">Используйте <code>Promise.race()</code> с <code>setTimeout</code>.</div>
+        <div id="solution9" class="solution"><pre><code>function promiseWithTimeout(promise, timeout) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Timeout")), timeout)
+        )
+    ]);
+}</code></pre></div>
+    </div>
+
+    <!-- Задание 10 -->
+    <div class="task">
+        <div class="task-title">10. Генератор валидных данных <span class="difficulty hard">Сложный</span></div>
+        <div class="task-desc">Напишите функцию <code>generateValidData(count, country)</code>, которая возвращает только пользователей старше 18 лет с валидным email.</div>
+        <div class="example">
+            <strong>Пример:</strong><br>
+            <code>console.log(generateValidData(3, 'us'));<br>// [{ name: 'John', email: 'john@valid.com', age: 25 }, ...]</code>
+        </div>
+        <button onclick="toggleHint('hint10')">Подсказка</button>
+        <button onclick="toggleSolution('solution10')">Решение</button>
+        <div id="hint10" class="hint">Используйте цикл с проверкой <code>chance.age() > 18</code> и регулярное выражение для email.</div>
+        <div id="solution10" class="solution"><pre><code>function generateValidData(count, country = 'us') {
+    const chance = new Chance();
+    const users = [];
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    while (users.length < count) {
+        const user = {
+            name: chance.name(),
+            email: chance.email(),
+            age: chance.age(),
+            country
+        };
+        if (user.age >= 18 && emailRegex.test(user.email)) {
+            users.push(user);
+        }
+    }
+    return users;
+}</code></pre></div>
+    </div>
+
+    <script>
+        function toggleHint(id) {
+            const hint = document.getElementById(id);
+            hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
+        }
+        function toggleSolution(id) {
+            const solution = document.getElementById(id);
+            solution.style.display = solution.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.1.8/chance.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
