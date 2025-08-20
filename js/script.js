@@ -89,7 +89,7 @@ class TimeLimitedCache{
         let entry = this.cache.get(key);
         if(!entry) return undefined;
         
-        if(Date.now() > entry.expires) {
+        if(Date.now() >= entry.expires) {
             clearTimeout(entry.timeout);
             this.cache.delete(key); 
             return undefined;
@@ -174,3 +174,29 @@ function promiseWithTimeout(promise, timeoutMs) {
 
 promiseWithTimeout(advancedDelay(2000), 1000)
 .catch(err => console.log(err.message));
+
+//task 10
+
+
+function generateValidData(count, country = 'us') {
+    const chance = new Chance();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let users = [];
+
+    while(users.length < count) {
+    const user = {
+       name: chance.name(), 
+       email: chance.email(),
+       age: chance.age(),
+       address: chance.address({country})
+    }
+    
+    if(user.age >= 18 || emailRegex.test(user.email)){
+         users.push(user);
+    }
+    }
+
+    return users;
+}
+
+console.log(generateValidData(3, 'us'));
